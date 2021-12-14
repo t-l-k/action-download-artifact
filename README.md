@@ -16,6 +16,7 @@ Let's suppose you have a workflow with a job in it that at the end uploads an ar
   with:
     # Optional, GitHub token, a Personal Access Token with `public_repo` scope if needed
     # Required, if artifact is from a different repo
+    # Required, if repo is private a Personal Access Token with `repo` scope is needed
     github_token: ${{secrets.GITHUB_TOKEN}}
     # Required, workflow file name or ID
     workflow: workflow_name.yml
@@ -50,4 +51,7 @@ Let's suppose you have a workflow with a job in it that at the end uploads an ar
     # then will get the last available artifact from previous workflow
     # default false, just try to download from the last one
     check_artifacts:  false
+    # Optional, search for the last workflow run whose stored an artifact named as in `name` input
+    # default false
+    search_artifacts: false
 ```

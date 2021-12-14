@@ -20,6 +20,7 @@ async function main() {
         let runID = core.getInput("run_id")
         let runNumber = core.getInput("run_number")
         let checkArtifacts = core.getInput("check_artifacts")
+        let searchArtifacts = core.getInput("search_artifacts")
 
         const client = github.getOctokit(token)
 
@@ -72,7 +73,7 @@ async function main() {
                     if (workflowConclusion && (workflowConclusion != run.conclusion && workflowConclusion != run.status)) {
                         continue
                     }
-                    if (checkArtifacts) {
+                    if (checkArtifacts || searchArtifacts) {
                         let artifacts = await client.actions.listWorkflowRunArtifacts({
                             owner: owner,
                             repo: repo,
@@ -80,6 +81,14 @@ async function main() {
                         })
                         if (artifacts.data.artifacts.length == 0) {
                             continue
+                        }
+                        if (searchArtifacts) {
+                            const artifact = artifacts.data.artifacts.find((artifact) => {
+                                return artifact.name == name
+                            })
+                            if (!artifact) {
+                                continue
+                            }
                         }
                     }
                     runID = run.id
@@ -148,3 +157,4 @@ async function main() {
 }
 
 main()
+
